@@ -9,12 +9,30 @@ local scene = composer.newScene()
 -- local forward references should go here
  
 ---------------------------------------------------------------------------------
- 
+ function gotoMenu(event)
+      composer.gotoScene("Menu", 
+     {
+         effect = "slideUp",
+         time = 100,
+      })
+end
+
 -- "scene:create()"
 function scene:create( event )
  
    local sceneGroup = self.view
- 
+       local returnButton = widget.newButton(
+      {
+         x = display.contentCenterX*(1/2),
+         y = display.contentHeight*(15/16),
+         id = "button1",
+         label = "Return",
+         fontSize = 40,
+         onEvent = gotoMenu
+      }
+      )
+      sceneGroup:insert(returnButton);
+
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end
@@ -31,6 +49,7 @@ function scene:show( event )
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
+
    end
 end
  

@@ -9,11 +9,36 @@ local scene = composer.newScene()
 -- local forward references should go here
  
 ---------------------------------------------------------------------------------
- 
+ local lives = 3
+ local score = 0
+ local died = false
+
+ local livesText
+ local scoreText
+
+
+
+
+
 -- "scene:create()"
 function scene:create( event )
  
    local sceneGroup = self.view
+      local pauseButton = widget.newButton(
+      {
+         x = 550,
+         y = 20,
+         id = "button1",
+         label = "PAUSE",
+         fontSize = 40
+      }
+      )
+      sceneGroup:insert(pauseButton); 
+      --local background = display.newImageRect("spacebackground.png", 640, 1140)
+     -- background.x = display.contentCenterX
+      --background.y = display.contentCenterY
+     -- sceneGroup:insert(background)
+
  
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
@@ -31,6 +56,23 @@ function scene:show( event )
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
+
+
+      local fireButton = widget.newButton(
+      {
+         x = 90,
+         y = display.contentHeight+15,
+         id = "button1",
+         label = "FIRE!",
+         fontSize = 40,
+
+         shape = "circle",
+         radius = 70
+      }
+      )
+      sceneGroup:insert(fireButton);
+
+
    end
 end
  

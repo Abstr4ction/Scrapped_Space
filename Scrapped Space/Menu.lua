@@ -36,6 +36,7 @@ function scene:create( event )
    y = display.contentHeight/4,
    id = "button1",
    label = "PLAY!",
+   fontSize = 40,
    onEvent = gotoPregame
    }
    )
@@ -45,6 +46,7 @@ function scene:create( event )
    y = display.contentHeight*(3/4),
    id = "button2",
    label = "Scoreboard",
+   fontSize = 40,
    onEvent = gotoScoreboard
    }
    )

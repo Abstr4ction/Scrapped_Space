@@ -35,6 +35,7 @@ function scene:create( event )
    y = display.contentHeight*(15/16),
    id = "button1",
    label = "Return",
+   fontSize = 40,
    onEvent = gotoMenu
    }
    )
@@ -44,6 +45,7 @@ function scene:create( event )
    y = display.contentHeight*(15/16),
    id = "button2",
    label = "Play!",
+   fontSize = 40,
    onEvent = gotoGame
    }
    )
