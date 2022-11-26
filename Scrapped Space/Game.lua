@@ -37,6 +37,12 @@ local main = display.newGroup()
 
  local shootCH
 
+
+
+ function pauseB(event)
+
+end
+
  local shipOpt = {
    frames = {
       {x = 26, y = 16, width = 77, height = 86}, -- frame 1 (ship points)
@@ -139,7 +145,7 @@ function scene:show( event )
 
    end
 
-      mainBody:addEventListener("tap", fireShot3)
+      --fireButton:addEventListener("tap", fireShot3)
 
 
       physics.addBody( mainBody ,"dynamic", {radius = 30 })
@@ -166,7 +172,8 @@ function scene:show( event )
          fontSize = 40,
 
          shape = "circle",
-         radius = 70
+         radius = 70,
+         onEvent = fireShot3
       }
       )
       sceneGroup:insert(fireButton);

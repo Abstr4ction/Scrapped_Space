@@ -25,14 +25,14 @@ function gotoMenu(event)
 end
 
 
-local opt = {
+local shipOpt = {
    frames = {
       {x = 26, y = 16, width = 77, height = 86}, -- frame 1 (ship points)
       {x = 153, y = 16, width = 77, height = 86} -- frame 2 (ship)
    }
 }
 
-local shipSheet = graphics.newImageSheet("HydraShip.png", opt)
+local shipSheet = graphics.newImageSheet("HydraShip.png", shipOpt)
 
 
 
