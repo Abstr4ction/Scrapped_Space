@@ -16,6 +16,15 @@ local scene = composer.newScene()
  local livesText
  local scoreText
 
+ local shipOpt = {
+   frames = {
+      {x = 26, y = 16, width = 77, height = 86}, -- frame 1 (ship points)
+      {x = 153, y = 16, width = 77, height = 86} -- frame 2 (ship)
+   }
+}
+
+local shipSheet = graphics.newImageSheet("HydraShip.png", shipOpt)
+
 
 
 
@@ -57,6 +66,15 @@ function scene:show( event )
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
 
+      local mainBody = display.newImage(shipSheet, 2);
+      sceneGroup:insert(mainBody)
+      mainBody.anchorX = 0.5;
+      mainBody.anchorY = 0.5;
+      mainBody.x = display.contentCenterX;
+      mainBody.y = display.contentCenterY + 400;
+      mainBody.xScale = 1.5;
+      mainBody.yScale = 1.5;
+
 
       local fireButton = widget.newButton(
       {
@@ -71,6 +89,21 @@ function scene:show( event )
       }
       )
       sceneGroup:insert(fireButton);
+
+-- Display lives and score
+
+      livesText = display.newText("Lives: "..lives, 200, 80, native.systemFont, 36)
+      scoreText = display.newText("Score: "..score, 400, 80, native.systemFont, 36)
+
+      sceneGroup:insert(livesText);
+      sceneGroup:insert(scoreText);
+
+      local function updateText()
+         livesText.text = "Lives: "..lives
+         scoreText.text = "Score: "..score
+      end
+
+
 
 
    end

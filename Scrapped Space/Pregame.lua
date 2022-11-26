@@ -25,6 +25,17 @@ function gotoMenu(event)
 end
 
 
+local opt = {
+   frames = {
+      {x = 26, y = 16, width = 77, height = 86}, -- frame 1 (ship points)
+      {x = 153, y = 16, width = 77, height = 86} -- frame 2 (ship)
+   }
+}
+
+local shipSheet = graphics.newImageSheet("HydraShip.png", opt)
+
+
+
 -- "scene:create()"
 function scene:create( event )
  
@@ -67,6 +78,16 @@ function scene:show( event )
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
+
+      local mainBody = display.newImage(shipSheet, 1);
+      sceneGroup:insert(mainBody)
+      mainBody.anchorX = 0.5;
+      mainBody.anchorY = 0.5;
+      mainBody.x = display.contentCenterX;
+      mainBody.y = display.contentCenterY;
+      mainBody.xScale = 2.5;
+      mainBody.yScale = 2.5;
+
    end
 end
  
