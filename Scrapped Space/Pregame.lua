@@ -1,6 +1,5 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
- 
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
 -- unless "composer.removeScene()" is called.
@@ -10,14 +9,14 @@ local scene = composer.newScene()
  
 ---------------------------------------------------------------------------------
 function gotoGame(event)
-
-      composer.removeScene("Game")
+      composer.removeScene("Game")  --why is this here?
       composer.gotoScene("Game", 
      {
          effect = "slideUp",
          time = 100,
       })
 end
+
 function gotoMenu(event)
       composer.gotoScene("Menu", 
      {
@@ -26,22 +25,33 @@ function gotoMenu(event)
       })
 end
 
-
 local shipOpt = {
    frames = {
-      {x = 26, y = 16, width = 77, height = 86}, -- frame 1 (ship points)
-      {x = 153, y = 16, width = 77, height = 86} -- frame 2 (ship)
+      {x = 0, y = 0, width = 128, height = 128}, -- frame 1 (ship points)
+      {x = 129, y = 0, width = 128, height = 128} -- frame 2 (ship)
    }
 }
 
-local shipSheet = graphics.newImageSheet("HydraShip.png", shipOpt)
+local shipSheet1 = graphics.newImageSheet("HydraShip.png", shipOpt)  --ship 1, hydra
+local shipSheet2 = graphics.newImageSheet("MantaShip.png", shipOpt)  --ship 2, manta
 
-
+local bool shipver = false
 
 -- "scene:create()"
 function scene:create( event )
- 
+   
    local sceneGroup = self.view
+   local contactGroup = display.newGroup()   --group for contact circles
+   sceneGroup:insert(contactGroup)
+   local mainBody = display.newImage(shipSheet1, 1)   --since this is a guaranteed item in this menu
+   sceneGroup:insert(mainBody)                        --it is declared here
+   mainBody.anchorX = 0.5;
+   mainBody.anchorY = 0.5;
+   mainBody.x = display.contentCenterX;
+   mainBody.y = display.contentCenterY;
+   mainBody.xScale = 2.5;
+   mainBody.yScale = 2.5;
+
    local menuButton = widget.newButton(
    {
    x = display.contentCenterX*(1/2),
@@ -64,8 +74,59 @@ function scene:create( event )
    )
    sceneGroup:insert(menuButton)
    sceneGroup:insert(gameButton)
-   -- Initialize the scene here.
-   -- Example: add display objects to "sceneGroup", add touch listeners, etc.
+
+   function generateAttachCircles(state)
+      if(state) then
+         attachPoint=display.newCircle(contactGroup, mainBody.x, mainBody.y-30, 7)
+         attachPoint=display.newCircle(contactGroup, mainBody.x+52.5, mainBody.y-80, 7)
+         attachPoint=display.newCircle(contactGroup, mainBody.x-52.5, mainBody.y-80, 7)
+         attachPoint=display.newCircle(contactGroup, mainBody.x+84, mainBody.y+5, 7)
+         attachPoint=display.newCircle(contactGroup, mainBody.x-84, mainBody.y+5, 7)
+         sceneGroup:insert(contactGroup)
+      else
+         attachPoint=display.newCircle(contactGroup, mainBody.x-101, mainBody.y-20, 7)
+         attachPoint=display.newCircle(contactGroup, mainBody.x+40, mainBody.y-75, 7)
+         attachPoint=display.newCircle(contactGroup, mainBody.x-40, mainBody.y-75, 7)
+         attachPoint=display.newCircle(contactGroup, mainBody.x+101, mainBody.y-20, 7)
+         sceneGroup:insert(contactGroup)
+      end
+   end
+
+   function ShipSwitch()
+   shipver=not shipver
+   mainBody:removeSelf()            --clear reference to old image
+   mainBody=nil
+   contactGroup:removeSelf()
+   contactGroup=nil
+   contactGroup=display.newGroup()   --group for contact circles
+   if(shipver) then
+      mainBody = display.newImage(shipSheet2, 1)      --switch to new one
+   else
+      mainBody = display.newImage(shipSheet1, 1)
+   end
+   sceneGroup:insert(mainBody)
+   mainBody.anchorX = 0.5;
+   mainBody.anchorY = 0.5;
+   mainBody.x = display.contentCenterX;
+   mainBody.y = display.contentCenterY;
+   mainBody.xScale = 2.5;
+   mainBody.yScale = 2.5;
+   generateAttachCircles(not shipver)
+   end
+
+   local switchButton = widget.newButton(
+   {
+   x = display.contentCenterX,
+   y = display.contentHeight*(1/16),
+   id = "button2",
+   label = "switch ship",
+   fontSize = 40,
+   onPress = ShipSwitch
+   }
+   )
+   sceneGroup:insert(switchButton)
+
+   generateAttachCircles(not shipver)  --executes once to generate attach circles
 end
  
 -- "scene:show()"
@@ -80,16 +141,6 @@ function scene:show( event )
       -- Called when the scene is now on screen.
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
-
-      local mainBody = display.newImage(shipSheet, 1);
-      sceneGroup:insert(mainBody)
-      mainBody.anchorX = 0.5;
-      mainBody.anchorY = 0.5;
-      mainBody.x = display.contentCenterX;
-      mainBody.y = display.contentCenterY;
-      mainBody.xScale = 2.5;
-      mainBody.yScale = 2.5;
-
    end
 end
  
