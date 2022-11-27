@@ -25,7 +25,9 @@ function gotoMenu(event)
       })
 end
 
-local shipOpt = {
+local shipOpt = { width=128, height=128, numFrames=2, sheetContentWidth=256, sheetContentHeight=128 }
+
+local weaponOpt = {
    frames = {
       {x = 0, y = 0, width = 128, height = 128}, -- frame 1 (ship points)
       {x = 129, y = 0, width = 128, height = 128} -- frame 2 (ship)
@@ -74,20 +76,31 @@ function scene:create( event )
    )
    sceneGroup:insert(menuButton)
    sceneGroup:insert(gameButton)
+   function myListener(event)
+   end
 
    function generateAttachCircles(state)
       if(state) then
          attachPoint=display.newCircle(contactGroup, mainBody.x, mainBody.y-30, 7)
+         attachPoint:addEventListener( "touch", myListener )
          attachPoint=display.newCircle(contactGroup, mainBody.x+52.5, mainBody.y-80, 7)
+         attachPoint:addEventListener( "touch", myListener )
          attachPoint=display.newCircle(contactGroup, mainBody.x-52.5, mainBody.y-80, 7)
+         attachPoint:addEventListener( "touch", myListener )
          attachPoint=display.newCircle(contactGroup, mainBody.x+84, mainBody.y+5, 7)
+         attachPoint:addEventListener( "touch", myListener )
          attachPoint=display.newCircle(contactGroup, mainBody.x-84, mainBody.y+5, 7)
+         attachPoint:addEventListener( "touch", myListener )
          sceneGroup:insert(contactGroup)
       else
          attachPoint=display.newCircle(contactGroup, mainBody.x-101, mainBody.y-20, 7)
+         attachPoint:addEventListener( "touch", myListener )
          attachPoint=display.newCircle(contactGroup, mainBody.x+40, mainBody.y-75, 7)
+         attachPoint:addEventListener( "touch", myListener )
          attachPoint=display.newCircle(contactGroup, mainBody.x-40, mainBody.y-75, 7)
+         attachPoint:addEventListener( "touch", myListener )
          attachPoint=display.newCircle(contactGroup, mainBody.x+101, mainBody.y-20, 7)
+         attachPoint:addEventListener( "touch", myListener )
          sceneGroup:insert(contactGroup)
       end
    end
