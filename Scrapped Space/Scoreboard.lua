@@ -17,10 +17,80 @@ local scene = composer.newScene()
       })
 end
 
+local json = require("json")
+local scoresTable = {}
+
+local filePath = system.pathForFile( "scores.json", system.DocumentsDirectory)
+
+local function loadScores()
+      local file = io.open (  filePath, "r")
+
+      if file then
+            local contents = file:read("*a")
+            io.close( file)
+            scoresTable = json.decode( contents)
+      end
+      if scoresTable == nil or #scoresTable == 0 then 
+            scoresTable = {0,0,0,0,0,0,0,0}
+      end
+end
+
+local function saveScores()
+
+   for i = #scoresTable, 11, -1 do 
+      table.remove(scoresTable, i)
+   end 
+
+   local file = io.open(filePath, "w")
+
+   local temp = json.encode(scoresTable)
+
+   file:write( temp)
+   io.close(file)
+end
+
 -- "scene:create()"
 function scene:create( event )
  
    local sceneGroup = self.view
+
+   loadScores()
+
+   table.insert( scoresTable, composer.getVariable("finalScore"))
+
+   local function compare (a, b)
+      return a > b
+   end
+   table.sort(scoresTable, compare)
+
+   saveScores()
+
+   local background = display.newImageRect( sceneGroup, "space.png", 1200, 1200)
+      background.x = display.contentCenterX
+      background.y = display.contentCenterY
+      background.anchorX = 0.5;
+      background.anchorY = 0.5;
+      background.xScale = 1.5;
+      background.yScale = 1.5;
+      background:toBack( );
+
+      local highScoreHeader = display.newText(sceneGroup, "High Scores ", display.contentCenterX, 100, nil, 44)
+
+      for i = 1, 10 do 
+
+         if (scoresTable[i]) then 
+            local yPos = 150 + (i * 56)
+
+            local rankNum = display.newText(sceneGroup, i ..") ", display.contentCenterX-50, yPos, nil, 35)
+            rankNum:setFillColor (0.8)
+            rankNum.anchorX = 1
+
+            local thisScore = display.newText(sceneGroup, scoresTable[i], display.contentCenterX-30, yPos, nil,35) 
+            thisScore.anchorX = 0
+         end
+      end
+
+
        local returnButton = widget.newButton(
       {
          x = display.contentCenterX*(1/2),

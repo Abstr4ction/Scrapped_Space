@@ -10,6 +10,8 @@ local scene = composer.newScene()
  
 ---------------------------------------------------------------------------------
 function gotoGame(event)
+
+      composer.removeScene("Game")
       composer.gotoScene("Game", 
      {
          effect = "slideUp",

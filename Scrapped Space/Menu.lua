@@ -12,6 +12,8 @@ local scene = composer.newScene()
  
 -- "scene:create()"
 function gotoScoreboard(event)
+
+   composer.removeScene("Scoreboard")
       composer.gotoScene("Scoreboard", 
      {
          effect = "slideUp",

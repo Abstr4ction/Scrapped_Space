@@ -14,9 +14,10 @@ physics.setGravity( 0, 0 )
  
 -- local forward references should go here
 
-local background = display.newGroup()
-local GUI = display.newGroup()
-local main = display.newGroup()
+local background 
+local GUI 
+local main 
+
 
 
  
@@ -39,8 +40,12 @@ local main = display.newGroup()
 
 
 
- function pauseB(event)
-
+function gotoMenu(event)
+      composer.gotoScene("Menu", 
+     {
+         effect = "slideUp",
+         time = 100,
+      })
 end
 
  local shipOpt = {
@@ -67,6 +72,42 @@ local shot3Sheet = graphics.newImageSheet("Shot3.png", shot3Opt)
 
 --}
 
+local function fireShot3 ()
+      local newShot = display.newImageRect(shot3Sheet, 1, 6,11)
+      physics.addBody(newShot, "dynamic", {isSensor = true})
+      audio.play(shootCH, {channel = 2})
+      print("Tap")
+      newShot.isBullet = true
+      newShot.myName = "shot3"
+      newShot.xScale = 2.0
+      newShot.yScale = 2.0
+      newShot.x = mainBody.x
+      newShot.y = mainBody.y
+      --sceneGroup:insert( newShot )
+
+      transition.to(newShot, {y = -40, time = 500, 
+                  onComplete = function() display.remove(newShot) end })
+
+   end
+
+   -- Display lives and score
+
+
+     -- sceneGroup:insert(livesText);
+     -- sceneGroup:insert(scoreText);
+
+      local function updateText()
+         livesText.text = "Lives: "..lives
+         scoreText.text = "Score: "..score
+      end
+
+local function endGame()
+   composer.setVariable( "finalScore", score )
+   composer.removeScene("Scoreboard")
+   composer.gotoScene( "Scoreboard" )
+
+end
+
 
 
 
@@ -78,6 +119,17 @@ function scene:create( event )
  
    local sceneGroup = self.view
 
+   physics.pause()
+
+   background = display.newGroup()
+   sceneGroup:insert(background)
+
+   GUI = display.newGroup()
+   sceneGroup:insert(GUI)
+
+   main = display.newGroup()
+   sceneGroup:insert(main)
+
 
 
       local spaceBackground = display.newImageRect(background, "space.png", 1200, 1200)
@@ -88,6 +140,24 @@ function scene:create( event )
       spaceBackground.xScale = 1.5;
       spaceBackground.yScale = 1.5;
       spaceBackground:toBack( );
+
+
+      livesText = display.newText(GUI,"Lives: "..lives, 200, 80, native.systemFont, 36)
+      scoreText = display.newText(GUI,"Score: "..score, 400, 80, native.systemFont, 36)
+
+
+      mainBody = display.newImage(shipSheet, 2) --77,86);
+      mainBody.anchorX = 0.5;
+      mainBody.anchorY = 0.5;
+      mainBody.x = display.contentCenterX;
+      mainBody.y = display.contentCenterY + 400;
+      mainBody.xScale = 1.5;
+      mainBody.yScale = 1.5;
+      mainBody:toFront();
+      sceneGroup:insert(mainBody)
+      mainBody.myName = "ship"
+
+   physics.addBody( mainBody ,"dynamic", {radius = 30 })
 
 
 
@@ -113,42 +183,10 @@ function scene:show( event )
       -- Insert code here to make the scene come alive.
       -- Example: start timers, begin animation, play audio, etc.
 
+      physics.start()
+
       audio.play(musicTrack, { channel=1, loops=-1 } )
 
-
-      mainBody = display.newImage(shipSheet, 2) --77,86);
-      mainBody.anchorX = 0.5;
-      mainBody.anchorY = 0.5;
-      mainBody.x = display.contentCenterX;
-      mainBody.y = display.contentCenterY + 400;
-      mainBody.xScale = 1.5;
-      mainBody.yScale = 1.5;
-      mainBody:toFront();
-      sceneGroup:insert(mainBody)
-      mainBody.myName = "ship"
-
-   local function fireShot3 ()
-      local newShot = display.newImageRect(shot3Sheet, 1, 6,11)
-      physics.addBody(newShot, "dynamic", {isSensor = true})
-      audio.play(shootCH, {channel = 2})
-      print("Tap")
-      newShot.isBullet = true
-      newShot.myName = "shot3"
-      newShot.xScale = 2.0
-      newShot.yScale = 2.0
-      newShot.x = mainBody.x
-      newShot.y = mainBody.y
-      sceneGroup:insert( newShot )
-
-      transition.to(newShot, {y = -40, time = 500, 
-                  onComplete = function() display.remove(newShot) end })
-
-   end
-
-      --fireButton:addEventListener("tap", fireShot3)
-
-
-      physics.addBody( mainBody ,"dynamic", {radius = 30 })
 
       local pauseButton = widget.newButton(
       {
@@ -156,11 +194,12 @@ function scene:show( event )
          y = 20,
          id = "button1",
          label = "PAUSE",
-         fontSize = 40
+         fontSize = 40,
+         onEvent = gotoMenu
       }
       )
       pauseButton:toFront();
-      sceneGroup:insert(pauseButton)
+      GUI:insert(pauseButton)
 
 
       local fireButton = widget.newButton(
@@ -176,20 +215,7 @@ function scene:show( event )
          onEvent = fireShot3
       }
       )
-      sceneGroup:insert(fireButton);
-
--- Display lives and score
-
-      livesText = display.newText("Lives: "..lives, 200, 80, native.systemFont, 36)
-      scoreText = display.newText("Score: "..score, 400, 80, native.systemFont, 36)
-
-      sceneGroup:insert(livesText);
-      sceneGroup:insert(scoreText);
-
-      local function updateText()
-         livesText.text = "Lives: "..lives
-         scoreText.text = "Score: "..score
-      end
+      GUI:insert(fireButton);
 
 
 
@@ -215,9 +241,9 @@ function scene:hide( event )
       -- Called immediately after scene goes off screen.
 
       -- Runtime:removeEventListener( " collision", onCollision)
-      -- physics.pause()
-      -- audio.stop(1)
-      -- composer.removeScene("Game")
+       physics.pause()
+       audio.stop(1)
+       composer.removeScene("Game")
    end
 end
  
