@@ -42,7 +42,7 @@ local shipSheet = graphics.newImageSheet("HydraShip.png", shipOpt)
 function scene:create( event )
  
    local sceneGroup = self.view
-   local gameButton = widget.newButton(
+   local menuButton = widget.newButton(
    {
    x = display.contentCenterX*(1/2),
    y = display.contentHeight*(15/16),
@@ -52,7 +52,7 @@ function scene:create( event )
    onEvent = gotoMenu
    }
    )
-   local scoreButton = widget.newButton(
+   local gameButton = widget.newButton(
    {
    x = display.contentCenterX*(3/2),
    y = display.contentHeight*(15/16),
@@ -62,8 +62,8 @@ function scene:create( event )
    onEvent = gotoGame
    }
    )
+   sceneGroup:insert(menuButton)
    sceneGroup:insert(gameButton)
-   sceneGroup:insert(scoreButton)
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end
