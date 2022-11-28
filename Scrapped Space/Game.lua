@@ -115,9 +115,6 @@ function pickup(event)
    elseif(event.phase == "moved") then
       event.target.x = event.x
       event.target.y = event.y
-   else
-      event.target.x = event.target.xtest;
-      event.target.y = event.target.ytest;
    end
    return true
 end
@@ -167,8 +164,6 @@ function scene:create( event )
       mainBody.y = display.contentCenterY + 400;
       mainBody.xScale = 1.5;
       mainBody.yScale = 1.5;
-      mainBody.xtest = mainBody.x;
-      mainBody.ytest = mainBody.y;
       mainBody:toFront();
       sceneGroup:insert(mainBody)
       mainBody.myName = "ship"
