@@ -25,14 +25,15 @@ function gotoMenu(event)
       })
 end
 
-local shipOpt = { width=128, height=128, numFrames=2, sheetContentWidth=256, sheetContentHeight=128 }
+local shipOpt = {width=128, height=128, numFrames=2}
 
-local weaponOpt = {
-   frames = {
-      {x = 0, y = 0, width = 128, height = 128}, -- frame 1 (ship points)
-      {x = 129, y = 0, width = 128, height = 128} -- frame 2 (ship)
-   }
-}
+local weaponOpt1 = {width=32, height=32, numFrames=5}
+
+local weaponOpt2 = {width=32, height=32, numFrames=6}
+
+local shieldOpt = {width=32, height=32, numFrames=9}
+
+local sawOpt = {width=32, height=32, numFrames=4}
 
 local shipSheet1 = graphics.newImageSheet("HydraShip.png", shipOpt)  --ship 1, hydra
 local shipSheet2 = graphics.newImageSheet("MantaShip.png", shipOpt)  --ship 2, manta
