@@ -1,6 +1,7 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local physics = require ("physics")
+local moving = 0;
 physics.start( )
 
 physics.setGravity( 0, 0 )
@@ -108,6 +109,19 @@ local function endGame()
 
 end
 
+function pickup(event)
+   if(event.phase == "began") then
+      moving = event.target.id
+   elseif(event.phase == "moved") then
+      event.target.x = event.x
+      event.target.y = event.y
+   else
+      event.target.x = event.target.xtest;
+      event.target.y = event.target.ytest;
+   end
+   return true
+end
+
 
 
 
@@ -153,11 +167,16 @@ function scene:create( event )
       mainBody.y = display.contentCenterY + 400;
       mainBody.xScale = 1.5;
       mainBody.yScale = 1.5;
+      mainBody.xtest = mainBody.x;
+      mainBody.ytest = mainBody.y;
       mainBody:toFront();
       sceneGroup:insert(mainBody)
       mainBody.myName = "ship"
 
    physics.addBody( mainBody ,"dynamic", {radius = 30 })
+ 
+      mainBody:addEventListener("touch",pickup)
+      mainBody.id = 1
 
 
 
