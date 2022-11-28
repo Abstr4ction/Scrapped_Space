@@ -26,6 +26,8 @@ local main
  local lives = 3
  local score = 0
  local died = false
+ local firing = false
+ local bodyExists = false
 
  local mainBody
  --sceneGroup:insert(mainBody)
@@ -42,6 +44,8 @@ local main
 
 
 function gotoMenu(event)
+   firing = false
+   bodyExists = false
       composer.gotoScene("Menu", 
      {
          effect = "slideUp",
@@ -74,22 +78,25 @@ local shot3Sheet = graphics.newImageSheet("Shot3.png", shot3Opt)
 --}
 
 local function fireShot3 ()
-      local newShot = display.newImageRect(shot3Sheet, 1, 6,11)
-      physics.addBody(newShot, "dynamic", {isSensor = true})
-      audio.play(shootCH, {channel = 2})
-      print("Tap")
-      newShot.isBullet = true
-      newShot.myName = "shot3"
-      newShot.xScale = 2.0
-      newShot.yScale = 2.0
-      newShot.x = mainBody.x
-      newShot.y = mainBody.y
-      --sceneGroup:insert( newShot )
+   if firing == true then --random conditional statements that kind of work but also kind of dont :)
+      if bodyExists == true then
+         local newShot = display.newImageRect(shot3Sheet, 1, 6,11)
+         physics.addBody(newShot, "dynamic", {isSensor = true})
+         audio.play(shootCH, {channel = 2})
+         --print("Tap")
+         newShot.isBullet = true
+         newShot.myName = "shot3"
+         newShot.xScale = 2.0
+         newShot.yScale = 2.0
+         newShot.x = mainBody.x
+         newShot.y = mainBody.y
+         --sceneGroup:insert( newShot )
 
-      transition.to(newShot, {y = -40, time = 500, 
-                  onComplete = function() display.remove(newShot) end })
-
+         transition.to(newShot, {y = -40, time = 500, 
+                     onComplete = function() display.remove(newShot) end })
+      end
    end
+end
 
    -- Display lives and score
 
@@ -118,6 +125,8 @@ function pickup(event)
    end
    return true
 end
+
+timer.performWithDelay(300, fireShot3, 0) --shoots every 300 ms
 
 
 
@@ -167,6 +176,7 @@ function scene:create( event )
       mainBody:toFront();
       sceneGroup:insert(mainBody)
       mainBody.myName = "ship"
+      bodyExists = true
 
    physics.addBody( mainBody ,"dynamic", {radius = 30 })
  
@@ -191,6 +201,7 @@ function scene:show( event )
    local phase = event.phase
  
    if ( phase == "will" ) then
+      firing = true
       -- Called when the scene is still off screen (but is about to come on screen).
    elseif ( phase == "did" ) then
       -- Called when the scene is now on screen.
@@ -216,21 +227,20 @@ function scene:show( event )
       GUI:insert(pauseButton)
 
 
-      local fireButton = widget.newButton(
-      {
-         x = 90,
-         y = display.contentHeight+15,
-         id = "button1",
-         label = "FIRE!",
-         fontSize = 40,
+      --local fireButton = widget.newButton(
+      --{
+         --x = 90,
+         --y = display.contentHeight+15,
+         --id = "button1",
+         --label = "FIRE!",
+         --fontSize = 40,
 
-         shape = "circle",
-         radius = 70,
-         onEvent = fireShot3
-      }
-      )
-      GUI:insert(fireButton);
-
+         --shape = "circle",
+         --radius = 70,
+         --onEvent = fireShot3
+      --}
+      --)
+      --GUI:insert(fireButton);
 
 
 
