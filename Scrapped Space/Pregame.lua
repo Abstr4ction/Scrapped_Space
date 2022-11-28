@@ -162,8 +162,7 @@ function scene:create( event )
       elseif(set==1)then
          event.target:removeSelf()
          event.target=nil
-         event.target = display.newImage(weaponSheet1, 1)   --since this is a guaranteed item in this menu
-         sceneGroup:insert(event.target)                        --it is declared here
+         event.target = display.newImage(weaponSheet1, 1)   --since this is a guaranteed item in this men                     
          event.target.anchorX = 0.5;
          event.target.anchorY = 0.5;
          event.target.x = x;
@@ -171,12 +170,14 @@ function scene:create( event )
          event.target.xScale = 2.5;
          event.target.yScale = 2.5;
          event.target.id=1;
+         contactGroup:insert(event.target)
+         sceneGroup:insert(contactGroup)
          event.target:addEventListener("touch",myListener)
       elseif(set==2)then
          event.target:removeSelf()
          event.target=nil
          event.target = display.newImage(weaponSheet2, 1)   --since this is a guaranteed item in this menu
-         sceneGroup:insert(event.target)                        --it is declared here
+         sceneGroup:insert(event.target)                        
          event.target.anchorX = 0.5;
          event.target.anchorY = 0.5;
          event.target.x = x;
@@ -184,12 +185,14 @@ function scene:create( event )
          event.target.xScale = 2.5;
          event.target.yScale = 2.5;
          event.target.id=2;
+         contactGroup:insert(event.target)
+         sceneGroup:insert(contactGroup)
          event.target:addEventListener("touch",myListener)
       elseif(set==3)then
          event.target:removeSelf()
          event.target=nil
          event.target = display.newImage(shieldSheet, 1)   --since this is a guaranteed item in this menu
-         sceneGroup:insert(event.target)                        --it is declared here
+         sceneGroup:insert(event.target)                      
          event.target.anchorX = 0.5;
          event.target.anchorY = 0.5;
          event.target.x = x;
@@ -197,12 +200,14 @@ function scene:create( event )
          event.target.xScale = 2.5;
          event.target.yScale = 2.5;
          event.target.id=3;
+         contactGroup:insert(event.target)
+         sceneGroup:insert(contactGroup)
          event.target:addEventListener("touch",myListener)
       elseif(set==4)then
          event.target:removeSelf()
          event.target=nil
          event.target = display.newImage(sawSheet, 1)   --since this is a guaranteed item in this menu
-         sceneGroup:insert(event.target)                        --it is declared here
+         sceneGroup:insert(event.target)                       
          event.target.anchorX = 0.5;
          event.target.anchorY = 0.5;
          event.target.x = x;
@@ -210,6 +215,8 @@ function scene:create( event )
          event.target.xScale = 2.5;
          event.target.yScale = 2.5;
          event.target.id=4;
+         contactGroup:insert(event.target)
+         sceneGroup:insert(contactGroup)
          event.target:addEventListener("touch",myListener)
       else
       end
@@ -242,13 +249,13 @@ function scene:create( event )
    end
 
    function ShipSwitch()
-   shipver=not shipver
-   mainBody:removeSelf()            --clear reference to old image
-   mainBody=nil
-   contactGroup:removeSelf()
-   contactGroup=nil
-   contactGroup=display.newGroup()   --group for contact circles
-   if(shipver) then
+      shipver=not shipver
+      mainBody:removeSelf()            --clear reference to old image
+      mainBody=nil
+      contactGroup:removeSelf()
+      contactGroup=nil
+      contactGroup=display.newGroup()   --group for contact circles
+      if(shipver) then
       mainBody = display.newImage(shipSheet2, 1)      --switch to new one
    else
       mainBody = display.newImage(shipSheet1, 1)
@@ -261,6 +268,7 @@ function scene:create( event )
    mainBody.xScale = 2.5;
    mainBody.yScale = 2.5;
    generateAttachCircles(not shipver)
+   mainBody:toBack();
    end
 
    local switchButton = widget.newButton(
