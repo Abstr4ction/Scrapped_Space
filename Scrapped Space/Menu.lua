@@ -1,5 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
+local bgimage
  
 ---------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE
@@ -32,40 +33,36 @@ end
 function scene:create( event )
  
    local sceneGroup = self.view
+   bgimage = display.newImageRect("space1.png", 1779, 1300)
+   bgimage.x = display.contentCenterX
+   bgimage.y = display.contentCenterY
    local gameButton = widget.newButton(
    {
    x = display.contentCenterX,
    y = display.contentHeight/4,
    id = "button1",
-   label = "PLAY!",
-   fontSize = 40,
+   --label = "PLAY!",
+   defaultFile = "play.png",
    onEvent = gotoPregame
    }
    )
+
    local scoreButton = widget.newButton(
    {
    x = display.contentCenterX,
    y = display.contentHeight*(3/4),
    id = "button2",
-   label = "Scoreboard",
-   fontSize = 40,
+   --label = "Scoreboard",
+   --fontSize = 40,
+   defaultFile = "scoreboard.png",
    onEvent = gotoScoreboard
    }
    )
+   --local gamebtn = newImageRect( [sceneGroup], "play.png", [system.ResourceDirectory], width, height )
+   sceneGroup:insert(bgimage)
    sceneGroup:insert(gameButton)
    sceneGroup:insert(scoreButton)
-
-      scoreButton:toFront();
-
-
-      local spaceBackground = display.newImageRect(sceneGroup, "background.png", 800, 1400)
-      spaceBackground.x = display.contentCenterX
-      spaceBackground.y = display.contentCenterY
-      spaceBackground.anchorX = 0.5;
-      spaceBackground.anchorY = 0.5;
-      spaceBackground.xScale = 1.0;
-      spaceBackground.yScale = 1.0;
-      spaceBackground:toBack( );
+    
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end
