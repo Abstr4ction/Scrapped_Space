@@ -338,7 +338,7 @@ function scene:create( event )
          id = "button1",
          label = "PAUSE",
          fontSize = 40,
-         onEvent = gotoMenu
+         onPress = gotoMenu
       }
       )
       

@@ -50,12 +50,12 @@ function scene:create( event )
    {
    x = display.contentCenterX,
    y = 400,
-   width = 1000,
-   height = 850,
+   width = 300,
+   height = 100,
    id = "button1",
 
    defaultFile = "play.png",
-   onEvent = gotoPregame
+   onPress = gotoPregame
    }
    )
 
@@ -63,13 +63,13 @@ function scene:create( event )
    {
    x = display.contentCenterX,
    y = display.contentHeight*(5/6),
-      width = 1200,
-   height = 1050,
+   width = 300,
+   height = 100,
    id = "button2",
    --label = "Scoreboard",
    --fontSize = 40,
    defaultFile = "scoreboard.png",
-   onEvent = gotoScoreboard
+   onPress = gotoScoreboard
    }
    )
    --local gamebtn = newImageRect( [sceneGroup], "play.png", [system.ResourceDirectory], width, height )

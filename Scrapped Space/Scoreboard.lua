@@ -96,13 +96,13 @@ function scene:create( event )
          x = display.contentCenterX*(1/2),
          y = display.contentHeight*(15/16),
          id = "button1",
-         width = 1000,
-         height = 850,
+         width = 200,
+         height = 100,
          id = "button1",
          defaultFile = "return.png",
          --label = "Return",
          --fontSize = 40,
-         onEvent = gotoMenu
+         onPress = gotoMenu
       }
       )
       sceneGroup:insert(returnButton);

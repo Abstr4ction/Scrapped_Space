@@ -135,10 +135,10 @@ function scene:create( event )
    x = 150,
    y = display.contentHeight*(15/16),
    id = "button1",
-   width = 900,
-   height = 850,
+   width = 200,
+   height = 100,
    defaultFile = "return.png",
-   onEvent = gotoMenu
+   onPress = gotoMenu
    }
    )
 
@@ -147,10 +147,10 @@ function scene:create( event )
    x = display.actualContentWidth-150,
    y = display.contentHeight*(15/16),
    id = "button2",
-   width = 900,
-   height = 850,
+   width = 200,
+   height = 100,
    defaultFile = "play.png",
-   onEvent = gotoGame
+   onPress = gotoGame
    }
    )
 
