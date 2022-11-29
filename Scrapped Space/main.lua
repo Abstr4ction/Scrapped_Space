@@ -8,6 +8,7 @@ widget = require( "widget" )
 local composer = require("composer")
 csv = require("csv")
 display.setStatusBar(display.HiddenStatusBar)
+math.randomseed(os.time())
 
 audio.reserveChannels(1)
 audio.setVolume( 0.20, { channel=1})

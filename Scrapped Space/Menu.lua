@@ -54,6 +54,18 @@ function scene:create( event )
    )
    sceneGroup:insert(gameButton)
    sceneGroup:insert(scoreButton)
+
+      scoreButton:toFront();
+
+
+      local spaceBackground = display.newImageRect(sceneGroup, "background.png", 800, 1400)
+      spaceBackground.x = display.contentCenterX
+      spaceBackground.y = display.contentCenterY
+      spaceBackground.anchorX = 0.5;
+      spaceBackground.anchorY = 0.5;
+      spaceBackground.xScale = 1.0;
+      spaceBackground.yScale = 1.0;
+      spaceBackground:toBack( );
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end

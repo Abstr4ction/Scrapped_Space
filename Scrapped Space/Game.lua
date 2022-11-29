@@ -15,30 +15,25 @@ physics.setGravity( 0, 0 )
  
 -- local forward references should go here
 
-local background 
-local GUI 
-local main 
+local background = display.newGroup()
+local GUI = display.newGroup()
+local main = display.newGroup()
 
 
-
- 
 ---------------------------------------------------------------------------------
  local lives = 3
  local score = 0
  local died = false
  local firing = false
  local bodyExists = false
-
  local mainBody
- --sceneGroup:insert(mainBody)
-
+ local asteroidsTable = {}
+ local gameLoopTimer
  local livesText
  local scoreText
-
  local explosionSound
  local shipFire
  local musicTrack
-
  local shootCH
 
 
@@ -71,6 +66,33 @@ local shot3Opt = {
 
 local shot3Sheet = graphics.newImageSheet("Shot3.png", shot3Opt)
 
+local sheetOptions =
+{
+    frames =
+    {
+        {   -- 1) asteroid 1
+            x = 0,
+            y = 0,
+            width = 102,
+            height = 85
+        },
+        {   -- 2) asteroid 2
+            x = 0,
+            y = 85,
+            width = 90,
+            height = 83
+        },
+        {   -- 3) asteroid 3
+            x = 0,
+            y = 168,
+            width = 100,
+            height = 97
+        },
+    },
+}
+
+local asteroidSheet = graphics.newImageSheet( "gameObjects.png", sheetOptions )
+
 --soundTable = {
 
   -- shotSound = audio.loadSound("shoot.wav")
@@ -80,7 +102,7 @@ local shot3Sheet = graphics.newImageSheet("Shot3.png", shot3Opt)
 local function fireShot3 ()
    if firing == true then --random conditional statements that kind of work but also kind of dont :)
       if bodyExists == true then
-         local newShot = display.newImageRect(shot3Sheet, 1, 6,11)
+         local newShot = display.newImageRect(main, shot3Sheet, 1, 6,11)
          physics.addBody(newShot, "dynamic", {isSensor = true})
          audio.play(shootCH, {channel = 2})
          --print("Tap")
@@ -126,7 +148,118 @@ function pickup(event)
    return true
 end
 
-timer.performWithDelay(300, fireShot3, 0) --shoots every 300 ms
+local function createAsteroid()
+ 
+   local newAsteroid = display.newImageRect (main, asteroidSheet, 1, 102, 85 )
+   table.insert( asteroidsTable, newAsteroid )
+   physics.addBody( newAsteroid, "dynamic", { radius=40, bounce=0.8 } )
+   newAsteroid.myName = "asteroid"
+
+   local whereFrom = math.random( 3 )
+ 
+      if ( whereFrom == 1 ) then
+         newAsteroid.x = -60
+         newAsteroid.y = math.random( 500 )
+         newAsteroid:setLinearVelocity( math.random( 40,120 ), math.random( 20,60 ) )
+ 
+      elseif ( whereFrom == 2 ) then
+        -- From the top
+         newAsteroid.x = math.random( display.contentWidth )
+         newAsteroid.y = -60
+         newAsteroid:setLinearVelocity( math.random( -40,40 ), math.random( 40,120 ) )
+      elseif ( whereFrom == 3 ) then
+        -- From the right
+         newAsteroid.x = display.contentWidth + 60
+         newAsteroid.y = math.random( 500 )
+         newAsteroid:setLinearVelocity( math.random( -120,-40 ), math.random( 20,60 ) )
+      end
+
+      newAsteroid:applyTorque( math.random( -6,6 ) )
+end
+
+local function gameLoop()
+ 
+    -- Create new asteroid
+    createAsteroid()
+
+    for i = #asteroidsTable, 1, -1 do
+        local thisAsteroid = asteroidsTable[i]
+ 
+        if ( thisAsteroid.x < -100 or
+             thisAsteroid.x > display.contentWidth + 100 or
+             thisAsteroid.y < -100 or
+             thisAsteroid.y > display.contentHeight + 100 )
+        then
+            display.remove( thisAsteroid )
+            table.remove( asteroidsTable, i )
+        end
+    end
+end
+
+local function restoreShip()
+ 
+    mainBody.isBodyActive = false
+    mainBody.x = display.contentCenterX
+    mainBody.y = display.contentHeight - 100
+ 
+    -- Fade in the ship
+    transition.to( mainBody, { alpha=1, time=4000,
+        onComplete = function()
+            mainBody.isBodyActive = true
+            died = false
+        end
+    } )
+end
+
+local function onCollision( event )
+ 
+    if ( event.phase == "began" ) then
+ 
+        local obj1 = event.object1
+        local obj2 = event.object2
+
+        if ( ( obj1.myName == "shot3" and obj2.myName == "asteroid" ) or
+             ( obj1.myName == "asteroid" and obj2.myName == "shot3" ) )
+        then
+
+            display.remove( obj1 )
+            display.remove( obj2 )
+            audio.play(explosionSound)
+            for i = #asteroidsTable, 1, -1 do
+                if ( asteroidsTable[i] == obj1 or asteroidsTable[i] == obj2 ) then
+                    table.remove( asteroidsTable, i )
+                    break
+                end
+            end
+
+            score = score + 100
+            scoreText.text = "Score: "..score
+
+         elseif ( ( obj1.myName == "ship" and obj2.myName == "asteroid" ) or
+                 ( obj1.myName == "asteroid" and obj2.myName == "ship" ) )
+        then
+            if ( died == false ) then
+
+               died = true 
+               audio.play(explosionSound)
+
+               -- update lives
+               lives = lives -1
+               livesText.text = "Lives: "..lives 
+
+               if (lives == 0) then 
+                  display.remove(mainBody)
+                  timer.performWithDelay(2000, endGame)
+               else 
+                  mainBody.alpha = 0
+                  timer.performWithDelay( 1000, restoreShip)
+               end
+ 
+            end
+ 
+        end 
+    end
+end
 
 
 
@@ -152,13 +285,13 @@ function scene:create( event )
 
 
 
-      local spaceBackground = display.newImageRect(background, "space.png", 1200, 1200)
+      local spaceBackground = display.newImageRect(background, "background.png", 800, 1400)
       spaceBackground.x = display.contentCenterX
       spaceBackground.y = display.contentCenterY
       spaceBackground.anchorX = 0.5;
       spaceBackground.anchorY = 0.5;
-      spaceBackground.xScale = 1.5;
-      spaceBackground.yScale = 1.5;
+      spaceBackground.xScale = 1.0;
+      spaceBackground.yScale = 1.0;
       spaceBackground:toBack( );
 
 
@@ -166,7 +299,7 @@ function scene:create( event )
       scoreText = display.newText(GUI,"Score: "..score, 400, 80, native.systemFont, 36)
 
 
-      mainBody = display.newImage(shipSheet, 2) --77,86);
+      mainBody = display.newImage(main, shipSheet, 2) --77,86);
       mainBody.anchorX = 0.5;
       mainBody.anchorY = 0.5;
       mainBody.x = display.contentCenterX;
@@ -178,18 +311,31 @@ function scene:create( event )
       mainBody.myName = "ship"
       bodyExists = true
 
-   physics.addBody( mainBody ,"dynamic", {radius = 30 })
+   physics.addBody( mainBody ,"kinematic", {radius = 30 })
  
       mainBody:addEventListener("touch",pickup)
       mainBody.id = 1
 
-
+ local pauseButton = widget.newButton(
+      {
+         x = 550,
+         y = 20,
+         id = "button1",
+         label = "PAUSE",
+         fontSize = 40,
+         onEvent = gotoMenu
+      }
+      )
+      
+      GUI:insert(pauseButton)
+      pauseButton:toFront();
 
  
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
    musicTrack = audio.loadStream( "wave.mp3")
    shootCH = audio.loadSound( "shoot.wav" )
+      explosionSound = audio.loadSound("Explosion1.wav")
 end
  
 -- "scene:show()"
@@ -212,19 +358,9 @@ function scene:show( event )
 
       audio.play(musicTrack, { channel=1, loops=-1 } )
 
-
-      local pauseButton = widget.newButton(
-      {
-         x = 550,
-         y = 20,
-         id = "button1",
-         label = "PAUSE",
-         fontSize = 40,
-         onEvent = gotoMenu
-      }
-      )
-      pauseButton:toFront();
-      GUI:insert(pauseButton)
+      shootLoopTimer = timer.performWithDelay(350, fireShot3, 0) --shoots every 300 ms
+      gameLoopTimer = timer.performWithDelay( 1000, gameLoop, 0 )
+      Runtime:addEventListener( "collision", onCollision )
 
 
       --local fireButton = widget.newButton(
@@ -264,10 +400,11 @@ function scene:hide( event )
    elseif ( phase == "did" ) then
       -- Called immediately after scene goes off screen.
 
-      -- Runtime:removeEventListener( " collision", onCollision)
+      Runtime:removeEventListener( " collision", onCollision)
        physics.pause()
        audio.stop(1)
        composer.removeScene("Game")
+       timer.cancelAll( )
    end
 end
  
@@ -279,6 +416,7 @@ function scene:destroy( event )
    local background = self.view
 
    audio.dispose(musicTrack)
+
  
    -- Called prior to the removal of scene's view ("sceneGroup").
    -- Insert code here to clean up the scene.
