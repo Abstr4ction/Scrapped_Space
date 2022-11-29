@@ -114,7 +114,7 @@ local function fireShot3 ()
          newShot.y = mainBody.y
          --sceneGroup:insert( newShot )
 
-         transition.to(newShot, {y = -40, time = 500, 
+         transition.to(newShot, {y = -40, time = 600, 
                      onComplete = function() display.remove(newShot) end })
       end
    end
@@ -335,7 +335,7 @@ function scene:create( event )
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
    musicTrack = audio.loadStream( "wave.mp3")
    shootCH = audio.loadSound( "shoot.wav" )
-      explosionSound = audio.loadSound("Explosion1.wav")
+   explosionSound = audio.loadSound("Explosion1.wav")
 end
  
 -- "scene:show()"
@@ -386,7 +386,9 @@ end
 -- "scene:hide()"
 function scene:hide( event )
  
-   background = self.view
+   local background = self.view
+   local main = self.view
+   local GUI = self.view
    local sceneGroup = self.view
    local phase = event.phase
  
@@ -405,15 +407,16 @@ function scene:hide( event )
        audio.stop(1)
        composer.removeScene("Game")
        timer.cancelAll( )
+       audio.pause()
    end
 end
  
 -- "scene:destroy()"
 function scene:destroy( event )
  
-   local sceneGroup = self.view
-
    local background = self.view
+   local main = self.view
+   local GUI = self.view
 
    audio.dispose(musicTrack)
 
