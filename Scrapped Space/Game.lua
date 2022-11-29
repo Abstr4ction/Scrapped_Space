@@ -15,12 +15,6 @@ physics.setGravity( 0, 0 )
  
 -- local forward references should go here
 
-local background = display.newGroup()
-local GUI = display.newGroup()
-local main = display.newGroup()
-
-
----------------------------------------------------------------------------------
  local lives = 3
  local score = 0
  local died = false
@@ -28,6 +22,8 @@ local main = display.newGroup()
  local bodyExists = false
  local mainBody
  local asteroidsTable = {}
+ local enemiesTable = {}
+ local enemyLoopTimer
  local gameLoopTimer
  local livesText
  local scoreText
@@ -57,6 +53,15 @@ end
 }
 
 local shipSheet = graphics.newImageSheet("HydraShip.png", shipOpt)
+
+ local enemy1Opt = {
+   frames = {
+      {x = 22, y = 13, width = 84, height = 93} -- frame 1 (enemy1)
+
+   }
+}
+
+local enemy1Sheet = graphics.newImageSheet("Enemy01.png", enemy1Opt)
 
 local shot3Opt = {
    frames = {
@@ -199,6 +204,57 @@ local function gameLoop()
     end
 end
 
+
+
+local function createEnemy()
+ 
+   local newEnemy = display.newImageRect (main, enemy1Sheet, 1, 84, 93 )
+   table.insert( enemiesTable, newEnemy )
+   physics.addBody( newEnemy, "dynamic", { radius=40, bounce=0.8 } )
+   newEnemy.myName = "Enemy"
+
+   local whereFrom = math.random( 3 )
+ 
+      if ( whereFrom == 1 ) then
+         newEnemy.x = -60
+         newEnemy.y = math.random( 500 )
+         newEnemy:setLinearVelocity( 0, math.random( 20,60 ) )
+ 
+      elseif ( whereFrom == 2 ) then
+        -- From the top
+         newEnemy.x = math.random( display.contentWidth )
+         newEnemy.y = -60
+         newEnemy:setLinearVelocity( 0, math.random( 40,120 ) )
+      elseif ( whereFrom == 3 ) then
+        -- From the right
+         newEnemy.x = display.contentWidth + 60
+         newEnemy.y = math.random( 500 )
+         newEnemy:setLinearVelocity( 0 , math.random( 20,60 ) )
+      end
+
+
+end
+
+
+local function enemyLoop()
+ 
+    -- Create new asteroid
+    createEnemy()
+
+    for i = #enemiesTable, 1, -1 do
+        local thisEnemy = enemiesTable[i]
+ 
+        if ( thisEnemy.x < -100 or
+             thisEnemy.x > display.contentWidth + 100 or
+             thisEnemy.y < -100 or
+             thisEnemy.y > display.contentHeight + 100 )
+        then
+            display.remove( thisEnemy )
+            table.remove( enemiesTable, i )
+        end
+    end
+end
+
 local function restoreShip()
  
    mainBody.isBodyActive = false
@@ -243,8 +299,48 @@ local function onCollision( event )
             score = score + 100
             scoreText.text = "Score: "..score
 
+         elseif ( ( obj1.myName == "Enemy" and obj2.myName == "asteroid" ) or
+                 ( obj1.myName == "asteroid" and obj2.myName == "Enemy" ) )
+
+         then
+
+            display.remove( obj1 )
+            display.remove( obj2 )
+            audio.play(explosionSound)
+            for i = #asteroidsTable, 1, -1 do
+                if ( asteroidsTable[i] == obj1 or asteroidsTable[i] == obj2 ) then
+                    table.remove( asteroidsTable, i )
+                    break
+                end
+            end
+            for i = #enemiesTable, 1, -1 do
+                if ( enemiesTable[i] == obj1 or enemiesTable[i] == obj2 ) then
+                    table.remove( enemiesTable, i )
+                    break
+                end
+            end
+
+         elseif ( ( obj1.myName == "shot3" and obj2.myName == "Enemy" ) or
+             ( obj1.myName == "Enemy" and obj2.myName == "shot3" ) )
+        then
+
+            display.remove( obj1 )
+            display.remove( obj2 )
+            audio.play(explosionSound)
+            for i = #enemiesTable, 1, -1 do
+                if ( enemiesTable[i] == obj1 or enemiesTable[i] == obj2 ) then
+                    table.remove( enemiesTable, i )
+                    break
+                end
+            end
+
+            score = score + 250
+            scoreText.text = "Score: "..score
+
          elseif ( ( obj1.myName == "ship" and obj2.myName == "asteroid" ) or
-                 ( obj1.myName == "asteroid" and obj2.myName == "ship" ) )
+                 ( obj1.myName == "asteroid" and obj2.myName == "ship" ) or 
+                  ( obj1.myName == "ship" and obj2.myName == "Enemy" ) or 
+                  ( obj1.myName == "Enemy" and obj2.myName == "ship" ))
         then
             if ( died == false ) then
 
@@ -259,11 +355,14 @@ local function onCollision( event )
                   display.remove(mainBody)
                   timer.performWithDelay(500, endGame)
                   timer.cancel( "fire" )
+                  timer.cancel( "asteroid" )
+                  timer.cancel( "enemy" )
                   audio.pause()
                   firing = false
                   bodyExists = false
                else 
                   mainBody.alpha = 0
+                  audio.play(explosionSound)
                   timer.performWithDelay( 1000, restoreShip)
                   timer.pause( "fire" )
                   firing = false
@@ -275,7 +374,6 @@ local function onCollision( event )
         end 
     end
 end
-
 
 
 
@@ -374,26 +472,9 @@ function scene:show( event )
       audio.play(musicTrack, { channel=1, loops=-1 } )
 
       shootLoopTimer = timer.performWithDelay(350, fireShot3, 0,"fire") --shoots every 300 ms
-      gameLoopTimer = timer.performWithDelay( 1000, gameLoop, 0 )
+      gameLoopTimer = timer.performWithDelay( 1000, gameLoop, 0 , "asteroid")
+      enemyLoopTimer = timer.performWithDelay(2000, enemyLoop, 0, "enemy")
       Runtime:addEventListener( "collision", onCollision )
-
-
-      --local fireButton = widget.newButton(
-      --{
-         --x = 90,
-         --y = display.contentHeight+15,
-         --id = "button1",
-         --label = "FIRE!",
-         --fontSize = 40,
-
-         --shape = "circle",
-         --radius = 70,
-         --onEvent = fireShot3
-      --}
-      --)
-      --GUI:insert(fireButton);
-
-
 
    end
 end
