@@ -46,12 +46,17 @@ local bool shipver = false
 -- "scene:create()"
 function scene:create( event )
 
+   local sceneGroup = self.view
+   local contactGroup = display.newGroup()   --group for contact circles
+   sceneGroup:insert(contactGroup)
+
    function gotoGame(event)
       composer.removeScene("Game")  --why is this here?
       composer.gotoScene("Game", 
      {
          effect = "slideUp",
          time = 100,
+         params={weapon=contactGroup[1].id,}
       })
    end
 
@@ -59,14 +64,9 @@ function scene:create( event )
       composer.gotoScene("Menu", 
      {
          effect = "slideUp",
-         time = 100,
-         params={weapon=contactGroup[1].id,}
+         time = 100
       })
    end
-   
-   local sceneGroup = self.view
-   local contactGroup = display.newGroup()   --group for contact circles
-   sceneGroup:insert(contactGroup)
    
    local mainBody = display.newImage(shipSheet1, 1)   --since this is a guaranteed item in this menu
    sceneGroup:insert(mainBody)                        --it is declared here
