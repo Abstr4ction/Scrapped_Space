@@ -56,12 +56,12 @@ local shipSheet = graphics.newImageSheet("HydraShip.png", shipOpt)
 
  local enemy1Opt = {
    frames = {
-      {x = 22, y = 13, width = 84, height = 93} -- frame 1 (enemy1)
+      {x = 14, y = 7, width = 37, height = 44} -- frame 1 (enemy1)
 
    }
 }
 
-local enemy1Sheet = graphics.newImageSheet("Enemy01.png", enemy1Opt)
+local enemy1Sheet = graphics.newImageSheet("Enemy03.png", enemy1Opt)
 
 local shot3Opt = {
    frames = {
@@ -71,6 +71,15 @@ local shot3Opt = {
 }
 
 local shot3Sheet = graphics.newImageSheet("Shot3.png", shot3Opt)
+
+
+local shot1Opt = {
+   frames = {
+      {x = 7, y = 4, width = 3, height = 6}, -- frame 1 (shot1 )
+   }
+}
+
+local shot1Sheet = graphics.newImageSheet("Shot1.png", shot1Opt)
 
 local sheetOptions =
 {
@@ -172,18 +181,18 @@ local function createAsteroid()
       if ( whereFrom == 1 ) then
          newAsteroid.x = -60
          newAsteroid.y = math.random( 500 )
-         newAsteroid:setLinearVelocity( math.random( 40,120 ), math.random( 20,60 ) )
+         newAsteroid:setLinearVelocity( math.random( 40,120 ), math.random( 80,120))
  
       elseif ( whereFrom == 2 ) then
         -- From the top
          newAsteroid.x = math.random( display.contentWidth )
          newAsteroid.y = -60
-         newAsteroid:setLinearVelocity( math.random( -40,40 ), math.random( 40,120 ) )
+         newAsteroid:setLinearVelocity( math.random( -40,40 ), math.random(100,200))
       elseif ( whereFrom == 3 ) then
         -- From the right
          newAsteroid.x = display.contentWidth + 60
          newAsteroid.y = math.random( 500 )
-         newAsteroid:setLinearVelocity( math.random( -120,-40 ), math.random( 20,60 ) )
+         newAsteroid:setLinearVelocity( math.random( -120,-40 ), math.random( 250,300 ) )
       end
 
       newAsteroid:applyTorque( math.random( -6,6 ) )
@@ -212,28 +221,30 @@ end
 
 local function createEnemy()
  
-   local newEnemy = display.newImageRect (main, enemy1Sheet, 1, 84, 93 )
+   local newEnemy = display.newImageRect (main, enemy1Sheet, 1, 37, 44 )
    table.insert( enemiesTable, newEnemy )
    physics.addBody( newEnemy, "dynamic", { radius=40, bounce=0.8 } )
    newEnemy.myName = "Enemy"
 
+
+
    local whereFrom = math.random( 3 )
  
       if ( whereFrom == 1 ) then
-         newEnemy.x = -60
-         newEnemy.y = math.random( 500 )
-         newEnemy:setLinearVelocity( 0, math.random( 20,60 ) )
+         newEnemy.x = math.random( display.contentWidth )
+         newEnemy.y = math.random(-20,20)
+         newEnemy:setLinearVelocity( 0, math.random( 150,200 ) )
  
       elseif ( whereFrom == 2 ) then
         -- From the top
          newEnemy.x = math.random( display.contentWidth )
          newEnemy.y = -60
-         newEnemy:setLinearVelocity( 0, math.random( 40,120 ) )
+         newEnemy:setLinearVelocity( math.random( -20,40 ), math.random( 100,150))
       elseif ( whereFrom == 3 ) then
         -- From the right
-         newEnemy.x = display.contentWidth + 60
-         newEnemy.y = math.random( 500 )
-         newEnemy:setLinearVelocity( 0 , math.random( 20,60 ) )
+         newEnemy.x = math.random( display.contentWidth )
+         newEnemy.y = math.random(-20,20)
+         newEnemy:setLinearVelocity( 0 , math.random( 300,550 ) )
       end
 
 
@@ -438,7 +449,7 @@ function scene:create( event )
          x = 550,
          y = 20,
          id = "button1",
-         label = "PAUSE",
+         label = "MENU",
          fontSize = 40,
          onPress = gotoMenu
       }
@@ -452,6 +463,7 @@ function scene:create( event )
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
    musicTrack = audio.loadStream( "wave.mp3")
    shootCH = audio.loadSound( "shoot.wav" )
+   shootE = audio.loadSound( "Shot1Sound.wav" )
    explosionSound = audio.loadSound("Explosion1.wav")
 end
  
@@ -475,9 +487,9 @@ function scene:show( event )
 
       audio.play(musicTrack, { channel=1, loops=-1 } )
 
-      shootLoopTimer = timer.performWithDelay(350, fireShot3, 0,"fire") --shoots every 300 ms
-      gameLoopTimer = timer.performWithDelay( 1000, gameLoop, 0 , "asteroid")
-      enemyLoopTimer = timer.performWithDelay(2000, enemyLoop, 0, "enemy")
+      shootLoopTimer = timer.performWithDelay(450, fireShot3, 0,"fire") --shoots every 400 ms
+      gameLoopTimer = timer.performWithDelay( 550, gameLoop, 0 , "asteroid")
+      enemyLoopTimer = timer.performWithDelay(1300, enemyLoop, 0, "enemy")
       Runtime:addEventListener( "collision", onCollision )
 
    end
