@@ -198,15 +198,18 @@ end
 
 local function restoreShip()
  
-    mainBody.isBodyActive = false
-    mainBody.x = display.contentCenterX
-    mainBody.y = display.contentHeight - 100
+   mainBody.isBodyActive = false
+   mainBody.x = display.contentCenterX
+   mainBody.y = display.contentHeight - 100
+   timer.resume( "fire" )
+   timer.resumeAll( )
  
     -- Fade in the ship
     transition.to( mainBody, { alpha=1, time=4000,
         onComplete = function()
             mainBody.isBodyActive = true
             died = false
+            timer.resume( "fire" )
         end
     } )
 end
@@ -249,10 +252,13 @@ local function onCollision( event )
 
                if (lives == 0) then 
                   display.remove(mainBody)
-                  timer.performWithDelay(2000, endGame)
+                  timer.performWithDelay(500, endGame)
+                  timer.cancel( "fire" )
+                  audio.pause()
                else 
                   mainBody.alpha = 0
                   timer.performWithDelay( 1000, restoreShip)
+                  timer.pause( "fire" )
                end
  
             end
@@ -358,7 +364,7 @@ function scene:show( event )
 
       audio.play(musicTrack, { channel=1, loops=-1 } )
 
-      shootLoopTimer = timer.performWithDelay(350, fireShot3, 0) --shoots every 300 ms
+      shootLoopTimer = timer.performWithDelay(350, fireShot3, 0,"fire") --shoots every 300 ms
       gameLoopTimer = timer.performWithDelay( 1000, gameLoop, 0 )
       Runtime:addEventListener( "collision", onCollision )
 

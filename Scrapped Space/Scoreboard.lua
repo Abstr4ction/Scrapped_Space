@@ -96,8 +96,12 @@ function scene:create( event )
          x = display.contentCenterX*(1/2),
          y = display.contentHeight*(15/16),
          id = "button1",
-         label = "Return",
-         fontSize = 40,
+         width = 1000,
+         height = 850,
+         id = "button1",
+         defaultFile = "return.png",
+         --label = "Return",
+         --fontSize = 40,
          onEvent = gotoMenu
       }
       )

@@ -135,8 +135,9 @@ function scene:create( event )
    x = display.contentCenterX*(1/2),
    y = display.contentHeight*(15/16),
    id = "button1",
-   label = "Return",
-   fontSize = 40,
+   width = 1000,
+   height = 850,
+   defaultFile = "return.png",
    onEvent = gotoMenu
    }
    )
@@ -146,8 +147,9 @@ function scene:create( event )
    x = display.contentCenterX*(3/2),
    y = display.contentHeight*(15/16),
    id = "button2",
-   label = "Play!",
-   fontSize = 40,
+   width = 1000,
+   height = 850,
+   defaultFile = "play.png",
    onEvent = gotoGame
    }
    )

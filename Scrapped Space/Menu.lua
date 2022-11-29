@@ -40,8 +40,11 @@ function scene:create( event )
    {
    x = display.contentCenterX,
    y = display.contentHeight/4,
+   width = 1000,
+   height = 850,
    id = "button1",
    --label = "PLAY!",
+   --fontSize = 40,
    defaultFile = "play.png",
    onEvent = gotoPregame
    }
@@ -51,6 +54,8 @@ function scene:create( event )
    {
    x = display.contentCenterX,
    y = display.contentHeight*(3/4),
+      width = 1000,
+   height = 850,
    id = "button2",
    --label = "Scoreboard",
    --fontSize = 40,
