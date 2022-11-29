@@ -36,15 +36,24 @@ function scene:create( event )
    bgimage = display.newImageRect("space1.png", 1779, 1300)
    bgimage.x = display.contentCenterX
    bgimage.y = display.contentCenterY
+   bgimage.anchorX = 0.5;
+   bgimage.anchorY = 0.5;
+   bgimage.xScale = 1.25;
+   bgimage.yScale = 1.25;
+   bgimage:toBack( );
+
+   title = display.newImageRect("title.png", 661, 377)
+   title.x = display.contentCenterX
+   title.y = 150
+
    local gameButton = widget.newButton(
    {
    x = display.contentCenterX,
-   y = display.contentHeight/4,
+   y = 400,
    width = 1000,
    height = 850,
    id = "button1",
-   --label = "PLAY!",
-   --fontSize = 40,
+
    defaultFile = "play.png",
    onEvent = gotoPregame
    }
@@ -53,9 +62,9 @@ function scene:create( event )
    local scoreButton = widget.newButton(
    {
    x = display.contentCenterX,
-   y = display.contentHeight*(3/4),
-      width = 1000,
-   height = 850,
+   y = display.contentHeight*(5/6),
+      width = 1200,
+   height = 1050,
    id = "button2",
    --label = "Scoreboard",
    --fontSize = 40,
@@ -65,6 +74,7 @@ function scene:create( event )
    )
    --local gamebtn = newImageRect( [sceneGroup], "play.png", [system.ResourceDirectory], width, height )
    sceneGroup:insert(bgimage)
+   sceneGroup:insert(title)
    sceneGroup:insert(gameButton)
    sceneGroup:insert(scoreButton)
     

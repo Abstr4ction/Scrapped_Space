@@ -41,6 +41,7 @@ local main = display.newGroup()
 function gotoMenu(event)
    firing = false
    bodyExists = false
+   composer.removeScene("Menu")
       composer.gotoScene("Menu", 
      {
          effect = "slideUp",
@@ -132,6 +133,8 @@ end
       end
 
 local function endGame()
+   firing = false
+   bodyExists = false
    composer.setVariable( "finalScore", score )
    composer.removeScene("Scoreboard")
    composer.gotoScene( "Scoreboard" )
@@ -209,6 +212,8 @@ local function restoreShip()
         onComplete = function()
             mainBody.isBodyActive = true
             died = false
+            firing = true
+            bodyExists = true
             timer.resume( "fire" )
         end
     } )
@@ -255,10 +260,14 @@ local function onCollision( event )
                   timer.performWithDelay(500, endGame)
                   timer.cancel( "fire" )
                   audio.pause()
+                  firing = false
+                  bodyExists = false
                else 
                   mainBody.alpha = 0
                   timer.performWithDelay( 1000, restoreShip)
                   timer.pause( "fire" )
+                  firing = false
+                  bodyExists = false
                end
  
             end

@@ -132,10 +132,10 @@ function scene:create( event )
 
    local menuButton = widget.newButton(
    {
-   x = display.contentCenterX*(1/2),
+   x = 150,
    y = display.contentHeight*(15/16),
    id = "button1",
-   width = 1000,
+   width = 900,
    height = 850,
    defaultFile = "return.png",
    onEvent = gotoMenu
@@ -144,10 +144,10 @@ function scene:create( event )
 
    local gameButton = widget.newButton(
    {
-   x = display.contentCenterX*(3/2),
+   x = display.actualContentWidth-150,
    y = display.contentHeight*(15/16),
    id = "button2",
-   width = 1000,
+   width = 900,
    height = 850,
    defaultFile = "play.png",
    onEvent = gotoGame
