@@ -147,13 +147,17 @@ local function endGame()
 end
 
 function pickup(event)
-   if(event.phase == "began") then
-      moving = event.target.id
-   elseif(event.phase == "moved") then
-      event.target.x = event.x
-      event.target.y = event.y
+   if (event.target.y >= display.contentCenterY + 210) then
+      if(event.phase == "began") then
+         moving = event.target.id
+      elseif(event.phase == "moved") then
+         event.target.x = event.x
+         event.target.y = event.y
+      end
+      return true
+   else 
+      event.target.y = event.target.y + 5 --pushes ship back down if it's too far up
    end
-   return true
 end
 
 local function createAsteroid()
