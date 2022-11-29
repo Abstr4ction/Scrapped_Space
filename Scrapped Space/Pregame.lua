@@ -9,22 +9,6 @@ local set=0;
 -- local forward references should go here
  
 ---------------------------------------------------------------------------------
-function gotoGame(event)
-      composer.removeScene("Game")  --why is this here?
-      composer.gotoScene("Game", 
-     {
-         effect = "slideUp",
-         time = 100,
-      })
-end
-
-function gotoMenu(event)
-      composer.gotoScene("Menu", 
-     {
-         effect = "slideUp",
-         time = 100,
-      })
-end
 
 function pickup(event)
    if(event.phase=="began") then
@@ -61,6 +45,24 @@ local bool shipver = false
 
 -- "scene:create()"
 function scene:create( event )
+
+   function gotoGame(event)
+      composer.removeScene("Game")  --why is this here?
+      composer.gotoScene("Game", 
+     {
+         effect = "slideUp",
+         time = 100,
+      })
+   end
+
+   function gotoMenu(event)
+      composer.gotoScene("Menu", 
+     {
+         effect = "slideUp",
+         time = 100,
+         params={weapon=contactGroup[1].id,}
+      })
+   end
    
    local sceneGroup = self.view
    local contactGroup = display.newGroup()   --group for contact circles
@@ -225,29 +227,29 @@ function scene:create( event )
    end
 
    function generateAttachCircles(state)     --setup for the attach circles
-      if(state) then
+      --if(state) then
          attachPoint=display.newCircle(contactGroup, mainBody.x, mainBody.y-30, 7)
          attachPoint:addEventListener( "touch", myListener )
-         attachPoint=display.newCircle(contactGroup, mainBody.x+52.5, mainBody.y-80, 7)
-         attachPoint:addEventListener( "touch", myListener )
-         attachPoint=display.newCircle(contactGroup, mainBody.x-52.5, mainBody.y-80, 7)
-         attachPoint:addEventListener( "touch", myListener )
-         attachPoint=display.newCircle(contactGroup, mainBody.x+84, mainBody.y+5, 7)
-         attachPoint:addEventListener( "touch", myListener )
-         attachPoint=display.newCircle(contactGroup, mainBody.x-84, mainBody.y+5, 7)
-         attachPoint:addEventListener( "touch", myListener )
+         --attachPoint=display.newCircle(contactGroup, mainBody.x+52.5, mainBody.y-80, 7)
+         --attachPoint:addEventListener( "touch", myListener )
+         --attachPoint=display.newCircle(contactGroup, mainBody.x-52.5, mainBody.y-80, 7)
+         --attachPoint:addEventListener( "touch", myListener )
+         --attachPoint=display.newCircle(contactGroup, mainBody.x+84, mainBody.y+5, 7)
+         --attachPoint:addEventListener( "touch", myListener )
+         --attachPoint=display.newCircle(contactGroup, mainBody.x-84, mainBody.y+5, 7)
+         --attachPoint:addEventListener( "touch", myListener )
          sceneGroup:insert(contactGroup)
-      else
-         attachPoint=display.newCircle(contactGroup, mainBody.x-101, mainBody.y-20, 7)
-         attachPoint:addEventListener( "touch", myListener )
-         attachPoint=display.newCircle(contactGroup, mainBody.x+40, mainBody.y-75, 7)
-         attachPoint:addEventListener( "touch", myListener )
-         attachPoint=display.newCircle(contactGroup, mainBody.x-40, mainBody.y-75, 7)
-         attachPoint:addEventListener( "touch", myListener )
-         attachPoint=display.newCircle(contactGroup, mainBody.x+101, mainBody.y-20, 7)
-         attachPoint:addEventListener( "touch", myListener )
-         sceneGroup:insert(contactGroup)
-      end
+      --else
+         --attachPoint=display.newCircle(contactGroup, mainBody.x-101, mainBody.y-20, 7)
+         --attachPoint:addEventListener( "touch", myListener )
+         --attachPoint=display.newCircle(contactGroup, mainBody.x+40, mainBody.y-75, 7)
+         --attachPoint:addEventListener( "touch", myListener )
+         --attachPoint=display.newCircle(contactGroup, mainBody.x-40, mainBody.y-75, 7)
+         --attachPoint:addEventListener( "touch", myListener )
+         --attachPoint=display.newCircle(contactGroup, mainBody.x+101, mainBody.y-20, 7)
+         --attachPoint:addEventListener( "touch", myListener )
+         --sceneGroup:insert(contactGroup)
+      --end
    end
 
    function ShipSwitch()
