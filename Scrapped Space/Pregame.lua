@@ -10,20 +10,20 @@ local set=0;
  
 ---------------------------------------------------------------------------------
 
-function pickup(event)
-   if(event.phase=="began") then
-      set=event.target.id
-   elseif(event.phase=="moved") then
-      event.target.x=event.x
+function pickup(event)  --function for the item pickup
+   if(event.phase=="began") then      --if item is being picked up
+      set=event.target.id              --set id to the picked up item's ID
+   elseif(event.phase=="moved") then      --if item is being moved
+      event.target.x=event.x              --move item
       event.target.y=event.y
    else
-      event.target.x=event.target.xtest;
+      event.target.x=event.target.xtest;  --else return it to its original spot
       event.target.y=event.target.ytest;
    end
    return true
 end
 
-local shipOpt = {width=128, height=128, numFrames=2}
+local shipOpt = {width=128, height=128, numFrames=2}  --all the frame data
 
 local weaponOpt1 = {width=32, height=32, numFrames=5}
 
@@ -37,7 +37,7 @@ local shipSheet1 = graphics.newImageSheet("HydraShip.png", shipOpt)  --ship 1, h
 local shipSheet2 = graphics.newImageSheet("MantaShip.png", shipOpt)  --ship 2, manta
 
 local weaponSheet1 = graphics.newImageSheet("Cannon1.png", weaponOpt1)  
-local weaponSheet2 = graphics.newImageSheet("Cannon2.png", weaponOpt2)  
+local weaponSheet2 = graphics.newImageSheet("Cannon2.png", weaponOpt2)  --all weapons
 local shieldSheet = graphics.newImageSheet("Shield.png", shieldOpt)  
 local sawSheet = graphics.newImageSheet("Sawblade.png", sawOpt)
 
@@ -72,7 +72,7 @@ function scene:create( event )
    sceneGroup:insert(mainBody)                        --it is declared here
    mainBody.anchorX = 0.5;
    mainBody.anchorY = 0.5;
-   mainBody.x = display.contentCenterX;
+   mainBody.x = display.contentCenterX;      --ship1
    mainBody.y = display.contentCenterY;
    mainBody.xScale = 2.5;
    mainBody.yScale = 2.5;
@@ -82,7 +82,7 @@ function scene:create( event )
    sceneGroup:insert(peashooter)                        --it is declared here
    peashooter.anchorX = 0.5;
    peashooter.anchorY = 0.5;
-   peashooter.x = display.contentCenterX-100;
+   peashooter.x = display.contentCenterX-100; --weapon1
    peashooter.y = display.contentCenterY-200;
    peashooter.xScale = 2.5;
    peashooter.yScale = 2.5;
@@ -95,7 +95,7 @@ function scene:create( event )
    sceneGroup:insert(railCannon)                        --it is declared here
    railCannon.anchorX = 0.5;
    railCannon.anchorY = 0.5;
-   railCannon.x = display.contentCenterX-200;
+   railCannon.x = display.contentCenterX-200; --weapon2
    railCannon.y = display.contentCenterY-200;
    railCannon.xScale = 2.5;
    railCannon.yScale = 2.5;
@@ -109,7 +109,7 @@ function scene:create( event )
    shield.anchorX = 0.5;
    shield.anchorY = 0.5;
    shield.x = display.contentCenterX;
-   shield.y = display.contentCenterY-200;
+   shield.y = display.contentCenterY-200; --shield
    shield.xScale = 2.5;
    shield.yScale = 2.5;
    shield.xtest=shield.x;
@@ -121,7 +121,7 @@ function scene:create( event )
    sceneGroup:insert(saw)                        --it is declared here
    saw.anchorX = 0.5;
    saw.anchorY = 0.5;
-   saw.x = display.contentCenterX+100;
+   saw.x = display.contentCenterX+100; --saw
    saw.y = display.contentCenterY-200;
    saw.xScale = 2.5;
    saw.yScale = 2.5;
@@ -132,7 +132,7 @@ function scene:create( event )
    
    --creation of items ends here
 
-   local menuButton = widget.newButton(
+   local menuButton = widget.newButton( --menu button
    {
    x = 150,
    y = display.contentHeight*(15/16),
@@ -144,7 +144,7 @@ function scene:create( event )
    }
    )
 
-   local gameButton = widget.newButton(
+   local gameButton = widget.newButton( --game button
    {
    x = display.actualContentWidth-150,
    y = display.contentHeight*(15/16),
@@ -159,14 +159,14 @@ function scene:create( event )
    sceneGroup:insert(menuButton)
    sceneGroup:insert(gameButton)
 
-   function myListener(event) --event for drag n drop
-      local x=event.target.x
-      local y=event.target.y
-      if(set==0)then
+   function myListener(event) --event for drag n drop- 
+      local x=event.target.x --each if switches the node to another weapon
+      local y=event.target.y --was originally going to be used for item set
+      if(set==0)then --went unused
       elseif(set==1)then
          event.target:removeSelf()
          event.target=nil
-         event.target = display.newImage(weaponSheet1, 1)   --since this is a guaranteed item in this men                     
+         event.target = display.newImage(weaponSheet1, 1)                    
          event.target.anchorX = 0.5;
          event.target.anchorY = 0.5;
          event.target.x = x;
@@ -180,7 +180,7 @@ function scene:create( event )
       elseif(set==2)then
          event.target:removeSelf()
          event.target=nil
-         event.target = display.newImage(weaponSheet2, 1)   --since this is a guaranteed item in this menu
+         event.target = display.newImage(weaponSheet2, 1)   
          sceneGroup:insert(event.target)                        
          event.target.anchorX = 0.5;
          event.target.anchorY = 0.5;
@@ -195,7 +195,7 @@ function scene:create( event )
       elseif(set==3)then
          event.target:removeSelf()
          event.target=nil
-         event.target = display.newImage(shieldSheet, 1)   --since this is a guaranteed item in this menu
+         event.target = display.newImage(shieldSheet, 1)   
          sceneGroup:insert(event.target)                      
          event.target.anchorX = 0.5;
          event.target.anchorY = 0.5;
@@ -210,7 +210,7 @@ function scene:create( event )
       elseif(set==4)then
          event.target:removeSelf()
          event.target=nil
-         event.target = display.newImage(sawSheet, 1)   --since this is a guaranteed item in this menu
+         event.target = display.newImage(sawSheet, 1)   
          sceneGroup:insert(event.target)                       
          event.target.anchorX = 0.5;
          event.target.anchorY = 0.5;
@@ -228,7 +228,7 @@ function scene:create( event )
 
    function generateAttachCircles(state)     --setup for the attach circles
       --if(state) then
-         attachPoint=display.newCircle(contactGroup, mainBody.x, mainBody.y-30, 7)
+         attachPoint=display.newCircle(contactGroup, mainBody.x, mainBody.y-30, 7) --node setup; does nothing
          attachPoint:addEventListener( "touch", myListener )
          --attachPoint=display.newCircle(contactGroup, mainBody.x+52.5, mainBody.y-80, 7)
          --attachPoint:addEventListener( "touch", myListener )
@@ -256,7 +256,7 @@ function scene:create( event )
       shipver=not shipver
       mainBody:removeSelf()            --clear reference to old image
       mainBody=nil
-      contactGroup:removeSelf()
+      contactGroup:removeSelf() --clear reference to old gropu
       contactGroup=nil
       contactGroup=display.newGroup()   --group for contact circles
       if(shipver) then
@@ -267,7 +267,7 @@ function scene:create( event )
    sceneGroup:insert(mainBody)
    mainBody.anchorX = 0.5;
    mainBody.anchorY = 0.5;
-   mainBody.x = display.contentCenterX;
+   mainBody.x = display.contentCenterX; --rebuild groups
    mainBody.y = display.contentCenterY;
    mainBody.xScale = 2.5;
    mainBody.yScale = 2.5;
