@@ -42,11 +42,13 @@ function scene:create( event )
    bgimage.yScale = 1.25;
    bgimage:toBack( );
 
+   -- **************************************************************************************************************
+
    title = display.newImageRect("title.png", 661, 377)
    title.x = display.contentCenterX
    title.y = 150
 
-   local gameButton = widget.newButton(
+   local gameButton = widget.newButton( -- button for go to pregame scene
    {
    x = display.contentCenterX,
    y = 400,
@@ -59,7 +61,7 @@ function scene:create( event )
    }
    )
 
-   local scoreButton = widget.newButton(
+   local scoreButton = widget.newButton(  -- button for go to scoreboard scene
    {
    x = display.contentCenterX,
    y = display.contentHeight*(5/6),
@@ -72,16 +74,20 @@ function scene:create( event )
    onPress = gotoScoreboard
    }
    )
-   --local gamebtn = newImageRect( [sceneGroup], "play.png", [system.ResourceDirectory], width, height )
+
    sceneGroup:insert(bgimage)
    sceneGroup:insert(title)
    sceneGroup:insert(gameButton)
    sceneGroup:insert(scoreButton)
+
+   -- **************************************************************************************************************
     
    -- Initialize the scene here.
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end
  
+
+ -- **************************************************************************************************************
 -- "scene:show()"
 function scene:show( event )
  
@@ -97,6 +103,8 @@ function scene:show( event )
    end
 end
  
+
+ -- **************************************************************************************************************
 -- "scene:hide()"
 function scene:hide( event )
  

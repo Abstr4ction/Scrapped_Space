@@ -8,8 +8,10 @@ widget = require( "widget" )
 local composer = require("composer")
 csv = require("csv")
 display.setStatusBar(display.HiddenStatusBar)
-math.randomseed(os.time())
+math.randomseed(os.time())		-- helps with random generator?
 
+-- **************************************************************************************************************
+-- audio channels are reserved here with volume changes
 audio.reserveChannels(1)
 audio.setVolume( 0.20, { channel=1})
 

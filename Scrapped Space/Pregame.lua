@@ -51,16 +51,16 @@ function scene:create( event )
    sceneGroup:insert(contactGroup)
 
    function gotoGame(event)
-      composer.removeScene("Game")  --why is this here?
+      composer.removeScene("Game")  -- scene change to Game (main game)
       composer.gotoScene("Game", 
      {
          effect = "slideUp",
          time = 100,
-         params={weapon=contactGroup[1].id,}
+         params={weapon=contactGroup[1].id,} -- param
       })
    end
 
-   function gotoMenu(event)
+   function gotoMenu(event)            -- scene change to Menu
       composer.gotoScene("Menu", 
      {
          effect = "slideUp",
@@ -132,6 +132,8 @@ function scene:create( event )
    
    --creation of items ends here
 
+   -- **************************************************************************************************************
+
    local menuButton = widget.newButton( --menu button
    {
    x = 150,
@@ -158,6 +160,8 @@ function scene:create( event )
 
    sceneGroup:insert(menuButton)
    sceneGroup:insert(gameButton)
+
+   -- **************************************************************************************************************
 
    function myListener(event) --event for drag n drop- 
       local x=event.target.x --each if switches the node to another weapon

@@ -16,7 +16,11 @@ local scene = composer.newScene()
          time = 100,
       })
 end
+-- **************************************************************************************************************
 
+--[[
+      json is used for keeping scores
+--]]
 local json = require("json")
 local scoresTable = {}
 
@@ -31,11 +35,11 @@ local function loadScores()
             scoresTable = json.decode( contents)
       end
       if scoresTable == nil or #scoresTable == 0 then 
-            scoresTable = {0,0,0,0,0,0,0,0}
+            scoresTable = {0,0,0,0,0,0,0,0} -- automatically set scores to 0
       end
 end
 
-local function saveScores()
+local function saveScores() -- save score
 
    for i = #scoresTable, 11, -1 do 
       table.remove(scoresTable, i)
@@ -56,7 +60,7 @@ function scene:create( event )
 
    loadScores()
 
-   table.insert( scoresTable, composer.getVariable("finalScore"))
+   table.insert( scoresTable, composer.getVariable("finalScore")) -- helps to compare highest scores
 
    local function compare (a, b)
       return a > b
@@ -64,8 +68,9 @@ function scene:create( event )
    table.sort(scoresTable, compare)
 
    saveScores()
+   -- **************************************************************************************************************
 
-   local background = display.newImageRect( sceneGroup, "background.png", 800, 1400)
+   local background = display.newImageRect( sceneGroup, "background.png", 800, 1400)      -- background 
       background.x = display.contentCenterX
       background.y = display.contentCenterY
       background.anchorX = 0.5;
@@ -74,9 +79,9 @@ function scene:create( event )
       background.yScale = 1.0;
       background:toBack( );
 
-      local highScoreHeader = display.newText(sceneGroup, "High Scores ", display.contentCenterX, 100, nil, 44)
+      local highScoreHeader = display.newText(sceneGroup, "High Scores ", display.contentCenterX, 100, nil, 44)   -- text for title
 
-      for i = 1, 10 do 
+      for i = 1, 10 do -- display top 10 scores from table
 
          if (scoresTable[i]) then 
             local yPos = 150 + (i * 56)
@@ -89,7 +94,7 @@ function scene:create( event )
             thisScore.anchorX = 0
          end
       end
-
+-- **************************************************************************************************************
 
        local returnButton = widget.newButton(
       {
@@ -111,6 +116,7 @@ function scene:create( event )
    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
 end
  
+ -- **************************************************************************************************************
 -- "scene:show()"
 function scene:show( event )
  
@@ -141,6 +147,7 @@ function scene:hide( event )
       -- Called immediately after scene goes off screen.
    end
 end
+-- **************************************************************************************************************
  
 -- "scene:destroy()"
 function scene:destroy( event )
